@@ -1,26 +1,22 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Contact } from './models/contact.model';
+import { ContactService } from './services/contact.service';
+import { RouterOutlet } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HttpClientModule, AsyncPipe],
+  imports: [RouterOutlet, AsyncPipe], 
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   
-  http = inject(HttpClient)
-   
-  contacts$ = this.getContacts();
-  
-  private getContacts(): Observable<Contact[]>{
-    return this.http.get<Contact[]>('https://localhost:7145/api/Contacts');
+  contacts$: Observable<Contact[]>;
+
+  constructor(private contactService: ContactService) {
+    this.contacts$ = this.contactService.getContacts();
   }
 }
-
-
